@@ -1,11 +1,942 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Doctor Chery</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Doctor Chery — Mecánica Automotriz</title>
+
+    <!-- Tipografía -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root{
+            --red: #e53935;
+            --red-dark: #c62828;
+            --bg: #000;
+            --muted: #bdbdbd;
+            --white: #fff;
+            --card-bg: rgba(255,255,255,0.04);
+            --glass: rgba(255,255,255,0.03);
+        }
+
+        html{ scroll-behavior: smooth; }
+        *{ box-sizing: border-box; }
+        body{
+            margin:0;
+            font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(229, 57, 53, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(229, 57, 53, 0.06) 0%, transparent 50%),
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(255, 255, 255, 0.01) 0px,
+                    transparent 1px,
+                    transparent 40px,
+                    rgba(255, 255, 255, 0.01) 41px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    rgba(255, 255, 255, 0.01) 0px,
+                    transparent 1px,
+                    transparent 40px,
+                    rgba(255, 255, 255, 0.01) 41px
+                ),
+                linear-gradient(180deg, #000 0%, #0a0a0a 50%, #050505 100%);
+            background-attachment: fixed;
+            color: var(--white);
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            line-height:1.5;
+        }
+
+        /* Header / Navigation */
+        header{
+            position:sticky;
+            top:0;
+            z-index:40;
+            backdrop-filter: blur(6px);
+            background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.25));
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .container{
+            max-width:1100px;
+            margin:0 auto;
+            padding:1rem;
+            display:flex;
+            align-items:center;
+            gap:1rem;
+            justify-content:space-between;
+        }
+
+        .logo{
+            display:flex;
+            align-items:center;
+            gap:.75rem;
+            font-weight:700;
+            letter-spacing:0.4px;
+            color:var(--white);
+            text-decoration:none;
+        }
+        .logo .mark{
+            width:44px;
+            height:44px;
+            display:grid;
+            place-items:center;
+            background:linear-gradient(135deg,var(--red),var(--red-dark));
+            border-radius:8px;
+            box-shadow:0 6px 18px rgba(229,57,53,0.18);
+            font-weight:900;
+            font-family: monospace;
+        }
+        nav{
+            display:flex;
+            gap:1rem;
+            align-items:center;
+        }
+        .nav-links{
+            display:flex;
+            gap:.5rem;
+            align-items:center;
+        }
+        .nav-links a{
+            color:var(--white);
+            text-decoration:none;
+            padding:.5rem .75rem;
+            border-radius:8px;
+            transition:background .18s, transform .12s;
+            font-weight:600;
+            font-size:0.95rem;
+            opacity:.95;
+        }
+        .nav-links a:hover{ background: rgba(255,255,255,0.03); transform:translateY(-2px); }
+
+        .cta{
+            background:var(--red);
+            color:var(--white);
+            padding:.55rem .9rem;
+            border-radius:10px;
+            box-shadow:0 6px 14px rgba(229,57,53,0.12);
+            text-decoration:none;
+            font-weight:700;
+            transition:transform .12s, background .12s;
+        }
+        .cta:hover{ transform:translateY(-3px); background:var(--red-dark); }
+
+        /* Mobile nav */
+        .menu-btn{
+            display:none;
+            background:transparent;
+            border:0;
+            color:var(--white);
+            font-size:1.3rem;
+        }
+        /* Estilos del botón de menú (aparece en pantallas pequeñas) */
+        .menu-btn{
+            display:none;
+            background:transparent;
+            border:0;
+            color:var(--white);
+            font-size:1.3rem;
+            padding:.45rem .6rem;
+            border-radius:8px;
+            background: rgba(255,255,255,0.02);
+            transition: background .12s, transform .12s;
+        }
+        .menu-btn:focus{ outline:2px solid rgba(229,57,53,0.18); transform:translateY(-1px); }
+
+        /* Asegurar que el menú móvil esté oculto por defecto en escritorio;
+           su visibilidad y animación se controlan por la clase .open en pantallas pequeñas */
+        .mobile-nav{
+            display:none;
+            position:fixed;
+            inset:70px 18px auto 18px;
+            background:linear-gradient(180deg, rgba(10,10,10,0.98), rgba(0,0,0,0.9));
+            border-radius:12px;
+            padding:1rem;
+            box-shadow:0 18px 50px rgba(0,0,0,0.7);
+            z-index:60;
+            width: calc(100% - 36px);
+            max-width:420px;
+            opacity:0;
+            transform:translateY(-8px);
+            transition:opacity .22s ease, transform .22s ease;
+            backface-visibility:hidden;
+        }
+
+        .mobile-nav a{
+            display:block;
+            color:var(--white);
+            text-decoration:none;
+            padding:.8rem .6rem;
+            border-radius:8px;
+            font-weight:700;
+            font-size:1rem;
+            transition:background .12s, transform .12s;
+        }
+        .mobile-nav a + a{ margin-top:.25rem; }
+        .mobile-nav a:hover{ background: rgba(255,255,255,0.03); transform:translateY(-2px); }
+
+        /* Mostrar con animación cuando se abre */
+        .mobile-nav.open{
+            display:block; /* necesario para que sea interactivo cuando se abre */
+            opacity:1;
+            transform:translateY(0);
+        }
+
+        /* Hero / Inicio */
+        #inicio{
+            padding:4rem 1rem;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            min-height:60vh;
+        }
+        .hero{
+            max-width:1100px;
+            margin:0 auto;
+            display:grid;
+            grid-template-columns: 1fr 420px;
+            gap:2rem;
+            align-items:center;
+        }
+        .hero-left{
+            padding:1rem 0;
+        }
+        .slogan{
+            color:var(--red);
+            font-weight:700;
+            letter-spacing:0.8px;
+            text-transform:uppercase;
+            display:inline-block;
+            margin-bottom:.6rem;
+        }
+        h1{
+            font-size:2.2rem;
+            margin:.2rem 0 1rem 0;
+            line-height:1.05;
+        }
+        p.lead{
+            color:var(--muted);
+            max-width:60ch;
+        }
+
+        .hero-card{
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            padding:1.25rem;
+            border-radius:14px;
+            border:1px solid rgba(255,255,255,0.03);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+        }
+
+        /* Servicios */
+        section{
+            padding:3rem 1rem;
+        }
+        .section-title{
+            max-width:1100px;
+            margin:0 auto 1rem auto;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:1rem;
+            padding:0 1rem;
+        }
+        .section-title h2{ margin:0; }
+        .services-grid{
+            max-width:1100px;
+            margin:1rem auto 0 auto;
+            display:flex;
+            flex-wrap:wrap;
+            justify-content:center;
+            gap:1rem;
+            padding:0 1rem 1rem 1rem;
+        }
+        .service{
+            background:var(--card-bg);
+            border-radius:12px;
+            padding:1.25rem;
+            display:flex;
+            gap:1rem;
+            align-items:flex-start;
+            border:1px solid rgba(255,255,255,0.03);
+            transition: transform .14s, box-shadow .14s;
+            flex:1 1 280px;
+            max-width:350px;
+        }
+        .service:hover{ transform:translateY(-6px); box-shadow: 0 14px 30px rgba(0,0,0,0.6); }
+        .svc-ico{
+            width:56px;
+            height:56px;
+            border-radius:10px;
+            background:linear-gradient(135deg,var(--red),var(--red-dark));
+            display:grid;
+            place-items:center;
+            font-weight:700;
+            color:var(--white);
+            flex:0 0 56px;
+            font-size:1.8rem;
+        }
+        .svc-ico svg{
+            width:28px;
+            height:28px;
+            fill:var(--white);
+        }
+        .svc-body{
+            flex:1;
+            min-width:0;
+            width:100%;
+        }
+        .svc-body h3{ margin:0 0 .5rem 0; font-size:1.05rem; line-height:1.3; }
+        .svc-body p{ margin:0; color:var(--muted); font-size:0.94rem; line-height:1.5; }
+
+        /* Galería / TikTok widget */
+        #galeria{ padding-top:0; }
+        .gallery-grid{
+            max-width:1100px;
+            margin:1rem auto 0 auto;
+            display:grid;
+            gap:1rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            padding:0 1rem 2rem 1rem;
+        }
+        .tiktok-card{
+            background:var(--glass);
+            border-radius:12px;
+            padding:0.5rem;
+            border:1px solid rgba(255,255,255,0.03);
+            overflow:hidden;
+            position:relative;
+            aspect-ratio: 9/16;
+            display:flex;
+            flex-direction:column;
+            justify-content:flex-end;
+        }
+        .tiktok-thumb{
+            position:absolute;
+            inset:0;
+            background:linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.4)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="1066"><rect width="100%" height="100%" fill="%23020202"/><text x="50%" y="50%" fill="%23bbbbbb" font-family="Poppins,Arial" font-size="22" text-anchor="middle">Cargando...</text></svg>') center/cover no-repeat;
+            border-radius:8px;
+            transform-origin:center;
+            transition: transform .18s, opacity .3s;
+            background-size: cover;
+            background-position: center;
+        }
+        .tiktok-thumb.loaded{
+            opacity: 1;
+        }
+        .tiktok-card:hover .tiktok-thumb{ transform:scale(1.03); }
+        .play-overlay{
+            position:absolute;
+            left:50%;
+            top:50%;
+            transform:translate(-50%,-50%);
+            width:54px;
+            height:54px;
+            border-radius:50%;
+            background: rgba(0,0,0,0.5);
+            display:grid;
+            place-items:center;
+            border:2px solid rgba(255,255,255,0.08);
+        }
+        .play-overlay svg{ fill:var(--white); width:22px; height:22px; margin-left:4px; }
+        .video-caption{
+            position:relative;
+            padding:.6rem;
+            color:var(--white);
+            z-index:2;
+            display:flex;
+            justify-content:space-between;
+            gap:.5rem;
+            align-items:center;
+            background: linear-gradient(180deg, transparent, rgba(0,0,0,0.55));
+        }
+        .video-caption .meta{ font-size:0.86rem; color:var(--muted); }
+
+        /* Contacto */
+        #contacto .contact-grid{
+            max-width:1100px;
+            margin:1rem auto 3rem auto;
+            display:grid;
+            grid-template-columns: 1fr 360px;
+            gap:1rem;
+            padding:0 1rem;
+        }
+        .contact-card{
+            background:var(--card-bg);
+            padding:1rem;
+            border-radius:12px;
+            border:1px solid rgba(255,255,255,0.03);
+        }
+        .info-row{ display:flex; gap:0.75rem; align-items:center; margin-bottom:.75rem; }
+        .info-icon{
+            width:44px;
+            height:44px;
+            border-radius:8px;
+            display:grid;
+            place-items:center;
+            background:linear-gradient(135deg,var(--red),var(--red-dark));
+            color:var(--white);
+            font-weight:700;
+            font-size:1.5rem;
+        }
+        .info-icon svg{
+            width:24px;
+            height:24px;
+            fill:var(--white);
+        }
+        .socials{ display:flex; gap:.6rem; margin-top:.5rem; }
+        .socials a{
+            display:inline-grid;
+            place-items:center;
+            width:44px;
+            height:44px;
+            border-radius:10px;
+            background:rgba(255,255,255,0.03);
+            color:var(--white);
+            text-decoration:none;
+            font-weight:700;
+            transition: transform .12s, background .12s;
+            font-size:1.4rem;
+        }
+        .socials a svg{
+            width:22px;
+            height:22px;
+            fill:var(--white);
+            transition: fill .12s;
+        }
+        .socials a:hover{ transform:translateY(-4px); background:linear-gradient(135deg,var(--red),var(--red-dark)); }
+
+        footer{
+            text-align:center;
+            color:var(--muted);
+            padding:2rem 1rem;
+            border-top:1px solid rgba(255,255,255,0.02);
+        }
+
+        /* Modal para TikTok */
+        .tiktok-modal{
+            display:none;
+            position:fixed;
+            inset:0;
+            background: rgba(0,0,0,0.92);
+            z-index:100;
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s ease;
+        }
+        .tiktok-modal.show{
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:1rem;
+        }
+        .modal-content{
+            position:relative;
+            width:100%;
+            max-width:605px;
+            max-height:90vh;
+            background: rgba(0,0,0,0.5);
+            border-radius:12px;
+            overflow:hidden;
+            animation: slideUp 0.3s ease;
+        }
+        .close-modal{
+            position:absolute;
+            top:1rem;
+            right:1rem;
+            background: rgba(0,0,0,0.7);
+            border:none;
+            color:var(--white);
+            font-size:1.8rem;
+            width:40px;
+            height:40px;
+            border-radius:50%;
+            cursor:pointer;
+            display:grid;
+            place-items:center;
+            z-index:10;
+            transition: transform .12s, background .12s;
+        }
+        .close-modal:hover{
+            background: rgba(229,57,53,0.9);
+            transform: rotate(90deg);
+        }
+        .video-container{
+            width:100%;
+            height:90vh;
+            max-height:1000px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+        @keyframes fadeIn{
+            from{ opacity:0; }
+            to{ opacity:1; }
+        }
+        @keyframes slideUp{
+            from{ transform:translateY(20px); opacity:0; }
+            to{ transform:translateY(0); opacity:1; }
+        }
+
+        /* Responsivo */
+        @media (max-width:900px){
+            .hero{ grid-template-columns: 1fr; }
+            #contacto .contact-grid{ grid-template-columns: 1fr; }
+            nav{ display:none; }
+            .menu-btn{ display:inline-block; }
+            /* En pantallas pequeñas, la clase .open controla la visibilidad y animación */
+            .mobile-nav.open{ display:block; }
+            .mobile-nav a{ display:block; padding:.75rem 0; border-bottom:1px solid rgba(255,255,255,0.02); }
+        }
+
+        @media (max-width:520px){
+            .logo{ gap:.5rem; }
+            h1{ font-size:1.45rem; }
+            .slogan{ font-size:0.78rem; }
+            .service{
+                flex:1 1 100%;
+                max-width:100%;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Page Doctor Chery</h1>
+    <header>
+        <div class="container" role="navigation" aria-label="Barra de navegación">
+            <a class="logo" href="#inicio">
+                <div class="mark" aria-hidden="true">DC</div>
+                <div>
+                    <div style="font-weight:800;">Doctor Chery</div>
+                    <div style="font-size:.78rem;color:var(--muted);margin-top:2px;">Especialistas en la salud de tu vehículo</div>
+                </div>
+            </a>
+
+            <nav aria-label="Enlaces principales">
+                <div class="nav-links">
+                    <a href="#inicio">Inicio</a>
+                    <a href="#servicios">Servicios</a>
+                    <a href="#galeria">Galería</a>
+                    <a href="#contacto" class="cta">Agenda una cita</a>
+                </div>
+            </nav>
+
+            <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mobileNav" title="Abrir menú">
+                ☰
+            </button>
+        </div>
+
+        <div id="mobileNav" class="mobile-nav" role="menu" aria-hidden="true">
+            <a href="#inicio">Inicio</a>
+            <a href="#servicios">Servicios</a>
+            <a href="#galeria">Galería</a>
+            <a href="#contacto">Contacto / Cita</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- INICIO -->
+        <section id="inicio" aria-labelledby="inicio-title">
+            <div class="hero">
+                <div class="hero-left">
+                    <span class="slogan">Servicio Profesional • Rapidez</span>
+                    <h1 id="inicio-title">Doctor Chery — Tu Mecánico de Confianza</h1>
+                    <p class="lead">Más de 10 años atendiendo vehículos, especializados en diagnóstico electrónico y mantenimiento integral. Cuidamos cada detalle para que tu auto vuelva al camino como nuevo.</p>
+                    <div style="margin-top:1.2rem; display:flex; gap:.8rem; align-items:center;">
+                        <a class="cta" href="#contacto">Agenda una cita</a>
+                        <a style="color:var(--muted); text-decoration:none; padding:.5rem .8rem; border-radius:8px; background:rgba(255,255,255,0.02)" href="#servicios">Ver servicios</a>
+                    </div>
+                </div>
+
+                <div class="hero-card" aria-hidden="true">
+                    <div style="display:flex;gap:1rem;align-items:center;">
+                        <div style="flex:0 0 84px;height:84px;border-radius:12px;background:linear-gradient(135deg,var(--red),var(--red-dark));display:grid;place-items:center;font-weight:800;">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:42px;height:42px;fill:#fff;">
+                                <path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div style="font-weight:700;font-size:1.02rem;">Diagnóstico con Scanner Profesional</div>
+                            <div style="color:var(--muted);margin-top:.35rem;">Analizamos sistemas electrónicos, lecturas de fallas y realizamos informes con recomendaciones claras.</div>
+                        </div>
+                    </div>
+
+                    <hr style="border:none;height:1px;background:rgba(255,255,255,0.03);margin:1rem 0;border-radius:2px;">
+
+                    <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+                        <div style="min-width:120px; padding:.6rem .75rem; border-radius:8px; background:rgba(255,255,255,0.02); text-align:center;">
+                            <div style="font-weight:700;color:var(--white);">Repuestos Originales</div>
+                            <div style="color:var(--muted);font-size:.86rem;">Calidad garantizada</div>
+                        </div>
+                        <div style="min-width:120px; padding:.6rem .75rem; border-radius:8px; background:rgba(255,255,255,0.02); text-align:center;">
+                            <div style="font-weight:700;color:var(--white);">Diagnóstico Rápido</div>
+                            <div style="color:var(--muted);font-size:.86rem;">Lecturas en tiempo real</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- QUIÉNES SOMOS (breve) -->
+        <section id="quienes" aria-labelledby="quienes-title">
+            <div class="section-title" style="padding-bottom:0;">
+                <h2 id="quienes-title">Tu Mecánico de Confianza</h2>
+                <div style="color:var(--muted);font-size:.95rem;">Profesionalismo, transparencia y garantía en cada intervención</div>
+            </div>
+
+            <div class="container" style="padding-top:.6rem;">
+                <div class="hero-card" style="width:100%;">
+                    <p style="margin:0;color:var(--muted);">
+                        Doctor Chery combina experiencia mecánica tradicional con herramientas de diagnóstico modernas. Especializados en marcas asiáticas como Chery, ofrecemos mantenimiento preventivo, reparaciones de motor y transmisiones, y servicio de aire acondicionado automotriz con enfoque en durabilidad y seguridad.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVICIOS -->
+        <section id="servicios" aria-labelledby="servicios-title">
+            <div class="section-title">
+                <h2 id="servicios-title">Nuestros Servicios</h2>
+                <div style="color:var(--muted);font-size:.95rem;">Atención integral para tu vehículo</div>
+            </div>
+
+            <div class="services-grid" role="list">
+                <div class="service" role="listitem">
+                    <div class="svc-ico">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 2v11h3v9l7-12h-4l4-8z"/>
+                        </svg>
+                    </div>
+                    <div class="svc-body">
+                        <h3>Diagnóstico Electrónico</h3>
+                        <p>Escaneo completo ECU, lectura de códigos, y verificación de sensores.</p>
+                    </div>
+                </div>
+
+                <div class="service" role="listitem">
+                    <div class="svc-ico">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/>
+                        </svg>
+                    </div>
+                    <div class="svc-body">
+                        <h3>Mantenimiento Preventivo</h3>
+                        <p>Cambio de aceite, filtros, frenos y puesta a punto según fabricante.</p>
+                    </div>
+                </div>
+
+                <div class="service" role="listitem">
+                    <div class="svc-ico">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18 2c1.1 0 2 .9 2 2v16c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h12m0 2H6v3h12V4m0 5H6v3h12V9m0 5H6v6h12v-6m-10 2h8v2H8v-2z"/>
+                        </svg>
+                    </div>
+                    <div class="svc-body">
+                        <h3>Reparaciones de Motor y Transmisión</h3>
+                        <p>Intervenciones con equipo especializado y pruebas de rendimiento.</p>
+                    </div>
+                </div>
+
+                <div class="service" role="listitem">
+                    <div class="svc-ico">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.3 2.26l-6 2.25C4.52 4.81 4 5.55 4 6.39v4.7c0 4.83 3.13 9.37 7.43 10.75.37.12.77.12 1.14 0 4.3-1.38 7.43-5.92 7.43-10.75v-4.7c0-.84-.52-1.58-1.3-1.88l-6-2.25c-.45-.17-.95-.17-1.4 0M12 11.99l2.5 1.73L14 10.72 16.5 9h-3.03L12 6.04 10.53 9H7.5l2.5 1.72-.5 3z"/>
+                        </svg>
+                    </div>
+                    <div class="svc-body">
+                        <h3>Aire Acondicionado Automotriz</h3>
+                        <p>Recargas, diagnóstico de fugas y reparación de compresores.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GALERÍA / TIKTOK -->
+        <section id="galeria" aria-labelledby="galeria-title">
+            <div class="section-title">
+                <h2 id="galeria-title">Mira Nuestro Trabajo en Acción</h2>
+                <div style="color:var(--muted);font-size:.95rem;">Videos cortos — diagnósticos y reparaciones</div>
+            </div>
+
+            <div class="gallery-grid" aria-live="polite">
+                <!-- Embed real de TikTok (proporcionado por el usuario).
+                     Nota: TikTok procesa blockquote con su script; funciona al servir la página por HTTP/HTTPS. -->
+                <!-- Tarjetas de TikTok con videos reales 
+                     - data-video-id: ID del video de TikTok
+                     - data-video-url: URL completa del video (para cargar miniatura automáticamente)
+                     - data-thumbnail (opcional): URL directa de la miniatura si quieres especificarla manualmente
+                -->
+                <div class="tiktok-card" role="article" aria-label="Video 1" 
+                     data-video-id="7518926812378909958" 
+                     data-video-url="https://www.tiktok.com/@doctorchery/video/7550061053808282936"
+                     style="cursor: pointer;">
+                    <div class="tiktok-thumb" aria-hidden="true"></div>
+                    <div class="play-overlay" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                    </div>
+                    <div class="video-caption">
+                        <div>
+                            <div style="font-weight:700;">Comsumo de aceite</div>
+
+                        </div>
+                        <div class="meta">▶</div>
+                    </div>
+                </div>
+
+                <div class="tiktok-card" role="article" aria-label="Video 2" 
+                     data-video-id="7552532417668517176" 
+                     data-video-url="https://www.tiktok.com/@doctorchery/video/7525152120530537733"
+                     style="cursor: pointer;">
+                    <div class="tiktok-thumb" aria-hidden="true"></div>
+                    <div class="play-overlay" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                    </div>
+                    <div class="video-caption">
+                        <div>
+                            <div style="font-weight:700;">Chery no enciende</div>
+                        </div>
+                        <div class="meta">▶</div>
+                    </div>
+                </div>
+
+                <div class="tiktok-card" role="article" aria-label="Video 3" 
+                     data-video-id="7541227422180592952" 
+                     data-video-url="https://www.tiktok.com/@doctorchery/video/7541227422180592952"
+                     style="cursor: pointer;">
+                    <div class="tiktok-thumb" aria-hidden="true"></div>
+                    <div class="play-overlay" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                    </div>
+                    <div class="video-caption">
+                        <div>
+                            <div style="font-weight:700;">Servicio a Domícilio</div>
+                        </div>
+                        <div class="meta">▶</div>
+                    </div>
+                </div>
+
+                <!-- Contenedor para integrar iframe real de TikTok en el futuro (ejemplo)
+                     <iframe src="https://www.tiktok.com/embed/..." style="width:100%;height:100%;border:0;"></iframe>
+                -->
+            </div>
+        </section>
+
+        <!-- CONTACTO -->
+        <section id="contacto" aria-labelledby="contacto-title">
+            <div class="section-title">
+                <h2 id="contacto-title">Agenda una Cita</h2>
+                <div style="color:var(--muted);font-size:.95rem;">Contáctanos y te atendemos rápido</div>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="info-row">
+                        <div class="info-icon">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div style="font-weight:700;">Teléfono / WhatsApp</div>
+                            <div style="color:var(--muted);">+57 300 123 4567</div>
+                            <div style="margin-top:.5rem;">
+                                <a href="tel:+573001234567" style="color:var(--red);text-decoration:none;font-weight:700;">Llamar</a>
+                                &nbsp;•&nbsp;
+                                <a href="https://wa.me/573001234567" target="_blank" rel="noopener" style="color:var(--red);text-decoration:none;font-weight:700;">WhatsApp</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-icon">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div style="font-weight:700;">Ubicación</div>
+                            <div style="color:var(--muted);">Barrio La Estación, Ciudad — Taller Doctor Chery</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:.4rem;">
+                        <div style="font-weight:700;margin-bottom:.5rem;">Redes Sociales</div>
+                        <div class="socials">
+                            <a href="https://www.tiktok.com/@doctorchery1" aria-label="TikTok" title="TikTok">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                                </svg>
+                            </a>
+                            <a href="#" aria-label="Instagram" title="Instagram">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-card" aria-hidden="false">
+                    <div style="font-weight:700;margin-bottom:.6rem;">Horario de Atención</div>
+                    <div style="color:var(--muted);margin-bottom:.8rem;">Lunes a Viernes — 8:00 a 18:00<br>Sábado — 8:00 a 13:00</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        © <strong>Doctor Chery</strong> — Taller mecánico. Todos los derechos reservados.
+    </footer>
+
+    <!-- Modal para reproducir videos de TikTok -->
+    <div id="tiktokModal" class="tiktok-modal">
+        <button class="close-modal" id="closeModal" aria-label="Cerrar video">×</button>
+        <div class="modal-content">
+            <div class="video-container" id="videoContainer">
+                <!-- El iframe de TikTok se cargará aquí dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <script async src="https://www.tiktok.com/embed.js"></script>
+
+    <script>
+        // Menú móvil
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileNav = document.getElementById('mobileNav');
+
+        menuBtn.addEventListener('click', () => {
+            const open = mobileNav.classList.toggle('open');
+            menuBtn.setAttribute('aria-expanded', String(open));
+            mobileNav.setAttribute('aria-hidden', String(!open));
+        });
+
+        // Cerrar menú al click en enlace (móvil)
+        mobileNav.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => {
+                mobileNav.classList.remove('open');
+                menuBtn.setAttribute('aria-expanded', 'false');
+                mobileNav.setAttribute('aria-hidden', 'true');
+            });
+        });
+
+        // Simulación de envío rápido
+        const form = document.getElementById('contactForm');
+        const formMsg = document.getElementById('formMsg');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            formMsg.style.display = 'block';
+            formMsg.textContent = 'Gracias — tu mensaje fue enviado. Te contactaremos pronto.';
+            form.reset();
+            setTimeout(()=> formMsg.style.display='none', 6000);
+        });
+
+        // Cargar miniaturas de TikTok automáticamente
+        async function loadTikTokThumbnails() {
+            const cards = document.querySelectorAll('.tiktok-card');
+            
+            for (const card of cards) {
+                const videoUrl = card.getAttribute('data-video-url');
+                const manualThumbnail = card.getAttribute('data-thumbnail');
+                const thumbElement = card.querySelector('.tiktok-thumb');
+                
+                // Si hay miniatura manual, usarla
+                if (manualThumbnail) {
+                    const img = new Image();
+                    img.onload = () => {
+                        thumbElement.style.backgroundImage = `linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.4)), url('${manualThumbnail}')`;
+                        thumbElement.style.backgroundSize = 'cover';
+                        thumbElement.style.backgroundPosition = 'center';
+                        thumbElement.classList.add('loaded');
+                    };
+                    img.src = manualThumbnail;
+                    continue;
+                }
+                
+                // Si hay URL del video, obtener miniatura desde oEmbed de TikTok
+                if (videoUrl) {
+                    try {
+                        const response = await fetch(`https://www.tiktok.com/oembed?url=${encodeURIComponent(videoUrl)}`);
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.thumbnail_url) {
+                                // Precargar la imagen antes de mostrarla
+                                const img = new Image();
+                                img.onload = () => {
+                                    thumbElement.style.backgroundImage = `linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.4)), url('${data.thumbnail_url}')`;
+                                    thumbElement.style.backgroundSize = 'cover';
+                                    thumbElement.style.backgroundPosition = 'center';
+                                    thumbElement.classList.add('loaded');
+                                };
+                                img.src = data.thumbnail_url;
+                            }
+                        }
+                    } catch (error) {
+                        console.log('No se pudo cargar la miniatura de TikTok:', error);
+                        // Mantener el placeholder por defecto
+                    }
+                }
+            }
+        }
+
+        // Cargar miniaturas cuando la página esté lista
+        loadTikTokThumbnails();
+
+        // Sistema de modal para videos de TikTok
+        const modal = document.getElementById('tiktokModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const videoContainer = document.getElementById('videoContainer');
+
+        // Abrir modal al hacer clic en una tarjeta
+        document.querySelectorAll('.tiktok-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const videoId = card.getAttribute('data-video-id');
+                
+                // Limpiar contenedor
+                videoContainer.innerHTML = '';
+                
+                // Crear iframe de TikTok embed
+                const iframe = document.createElement('iframe');
+                iframe.src = `https://www.tiktok.com/embed/v2/${videoId}`;
+                iframe.width = '100%';
+                iframe.height = '100%';
+                iframe.style.border = 'none';
+                iframe.style.maxWidth = '605px';
+                iframe.allow = 'encrypted-media';
+                iframe.allowFullscreen = true;
+                
+                videoContainer.appendChild(iframe);
+                
+                // Mostrar modal
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden'; // Prevenir scroll
+            });
+        });
+
+        // Cerrar modal con botón X
+        closeModalBtn.addEventListener('click', closeModal);
+
+        // Cerrar modal al hacer clic fuera del contenido
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Cerrar modal con tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('show')) {
+                closeModal();
+            }
+        });
+
+        // Función para cerrar el modal
+        function closeModal() {
+            modal.classList.remove('show');
+            document.body.style.overflow = ''; // Restaurar scroll
+            // Limpiar el iframe después de la animación
+            setTimeout(() => {
+                videoContainer.innerHTML = '';
+            }, 300);
+        }
+    </script>
 </body>
 </html>
