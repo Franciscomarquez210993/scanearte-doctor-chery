@@ -663,8 +663,9 @@
                      - data-thumbnail (opcional): URL directa de la miniatura si quieres especificarla manualmente
                 -->
                 <div class="tiktok-card" role="article" aria-label="Video 1" 
-                     data-video-id="7518926812378909958" 
-                     data-video-url="https://www.tiktok.com/@doctorchery/video/7550061053808282936"
+                     data-video-id="7550061053808282936" 
+                     data-video-url="https://www.tiktok.com/@doctorchery1/video/7550061053808282936"
+                     data-thumbnail="https://p16-sign-va.tiktokcdn.com/tos-maliva-p-0068/oIIjD3QHUfBxrSGNCgeeLJASEZQZJGGdCmjRNI~tplv-tiktokx-dmt-logom:tos-useast2a-v-0068/o4jHGyoYfAE0zpDnABI0FIBvNigEiCAkS5AISz.image?dr=14573&x-expires=1766088000&x-signature=8nK%2BSOqyIfpIinlO7wyA7ttl7EI%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=maliva"
                      style="cursor: pointer;">
                     <div class="tiktok-thumb" aria-hidden="true"></div>
                     <div class="play-overlay" aria-hidden="true">
@@ -679,8 +680,9 @@
                 </div>
 
                 <div class="tiktok-card" role="article" aria-label="Video 2" 
-                     data-video-id="7552532417668517176" 
-                     data-video-url="https://www.tiktok.com/@doctorchery/video/7525152120530537733"
+                     data-video-id="7525152120530537733" 
+                     data-video-url="https://www.tiktok.com/@doctorchery1/video/7525152120530537733"
+                     data-thumbnail="https://p16-sign-va.tiktokcdn.com/tos-maliva-p-0068/oAdeg3GDqQQILzEcVSeCjd7rfWNSaWIuAICaLI~tplv-tiktokx-origin.image?dr=14575&x-expires=1766088000&x-signature=q4JPbme0NME23HwyXLAAtivHm3Y%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=maliva"
                      style="cursor: pointer;">
                     <div class="tiktok-thumb" aria-hidden="true"></div>
                     <div class="play-overlay" aria-hidden="true">
@@ -696,7 +698,8 @@
 
                 <div class="tiktok-card" role="article" aria-label="Video 3" 
                      data-video-id="7541227422180592952" 
-                     data-video-url="https://www.tiktok.com/@doctorchery/video/7541227422180592952"
+                     data-video-url="https://www.tiktok.com/@doctorchery1/video/7541227422180592952"
+                     data-thumbnail="https://p16-sign-va.tiktokcdn.com/tos-maliva-p-0068/ok0Pj6wfRQSjIiCopCTFn1SEQ7DJR3AyegfuNy~tplv-tiktokx-origin.image?dr=14575&x-expires=1766088000&x-signature=Y6tbIuqQyOPv3FmlwMKwEvp8KbA%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=43f4a2f9&idc=maliva"
                      style="cursor: pointer;">
                     <div class="tiktok-thumb" aria-hidden="true"></div>
                     <div class="play-overlay" aria-hidden="true">
@@ -814,16 +817,18 @@
             });
         });
 
-        // Simulación de envío rápido
+        // Simulación de envío rápido (solo si existe el formulario)
         const form = document.getElementById('contactForm');
         const formMsg = document.getElementById('formMsg');
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            formMsg.style.display = 'block';
-            formMsg.textContent = 'Gracias — tu mensaje fue enviado. Te contactaremos pronto.';
-            form.reset();
-            setTimeout(()=> formMsg.style.display='none', 6000);
-        });
+        if (form && formMsg) {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                formMsg.style.display = 'block';
+                formMsg.textContent = 'Gracias — tu mensaje fue enviado. Te contactaremos pronto.';
+                form.reset();
+                setTimeout(()=> formMsg.style.display='none', 6000);
+            });
+        }
 
         // Cargar miniaturas de TikTok automáticamente
         async function loadTikTokThumbnails() {
